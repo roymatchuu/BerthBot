@@ -16,8 +16,42 @@ async def on_ready():
 async def b_add(ctx, member, date):
     bObj = Birthday(member, date)
 
-    addFile = open('filepath',"r+")
+    dateFlag = True
+    tempDate = bObj.bday.split("/")
+
+    try:
+        if tempDate[0] > 13 or tempDate[0] < 1:
+            await ctx.send("Invalid date.")
+            dateFlag = False
+        else:
+            pass
+
+        if tempDate[0] in (1, 3, 5, 7, 8, 10, 12):
+            if tempDate[1] > 31 or tempDate[1] < 1:
+                await ctx.send("Invalid date.")
+                dateFlag = False
+            else:
+                pass
+        elif tempDate[0] in (4, 6, 9, 11):
+            if tempDate[1] > 30 or tempDate[1] < 1:
+                await ctx.send("Invalid date.")
+                dateFlag = False
+            else:
+                pass
+        elif tempDate[0] == 2:
+            if tempDate[1] > 29 or tempDate[1] < 1:
+                await ctx.send("Invalid date.")
+                dateFlag = False
+            else:
+                pass
     
+    except:
+        await ctx.send("Invalid date.")
+        dateFlag = False
+    
+
+     
+    addFile = open('filepath',"r+")
     buff = 0
 
     line = addFile.readline()
@@ -30,9 +64,10 @@ async def b_add(ctx, member, date):
         line = addFile.readline()
 
 
+    # print(f'buff: {buff} and dateFlag: {dateFlag}')
     if (buff == 1):
         await ctx.send(f'{bObj.user} is already on the BerthList!')
-    elif(buff == 0):
+    elif(buff == 0 and dateFlag == True):
         addFile.write(f"{bObj.user} {bObj.bday}\n")
         await ctx.send(f'{bObj.user} whose birthday is on {bObj.bday} has been added to the Berth List!')
 
@@ -49,3 +84,4 @@ async def b_add(ctx, member, date):
 
     
 client.run('TOKEN')
+
