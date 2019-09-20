@@ -19,8 +19,6 @@ async def daily_check():
     # msgs = cycle(status)
 
     while not client.is_closed():
-        print("SELF IS NOT CLOSED!!!")
-
         checkFile = open(r"path","r")
         checkLine = checkFile.readline()
 
