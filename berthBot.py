@@ -9,15 +9,17 @@ import traceback
 from berthObj import *
 # delimeter = '!'
 client = commands.Bot(command_prefix = '!')
+client.remove_command('help')
 
 async def daily_check():
     berthFlag = False
-    greeting_time = '13:24'
+    greeting_time = '12:00'
     tempBDAY = ' '
 
     await client.wait_until_ready()
     # print("I AM READY!")
     msg_channel = client.get_channel(123456)
+
     bday_bucket = set()
     
     while not client.is_closed():
@@ -45,18 +47,21 @@ async def daily_check():
         checkFile.close()
 
         time_now = datetime.strftime(datetime.now(),'%H:%M')
-        # print(f'greeting time:{greeting_time} time_now:{time_now}')
+        print(f'greeting time:{greeting_time} time_now:{time_now}')
         
         if(greeting_time == time_now and berthFlag == True):
-            # print("it is time!")
+            print("it is time!")
             for bdays in bday_bucket:
-                await msg_channel.send(f'Happiest Birthday to {bdays}')
+                await msg_channel.send(f"@everyone, today is someone's special day.")
+                await msg_channel.send("-----------:balloon::tada::birthday::partying_face: -----------") 
+                await msg_channel.send(f"Happiest Birthday to {bdays}")
+                await msg_channel.send("-----------:balloon::tada::birthday::partying_face: -----------")
                 print("birthday greeting sent!")
             bday_bucket.clear()
 
-            time = 60
+            time = 84600
         else: 
-            time = 1
+            time = 15   
         await asyncio.sleep(time)
 
 # Sets Berth's status to online and the status message 
@@ -68,7 +73,14 @@ async def on_ready():
 # ping command to see if berth is functional
 @client.command()
 async def ping(ctx):
-    await ctx.send("```Berth is awake and is functional!```")
+    await ctx.send("Berth is awake and is functional! :grinning:")
+
+@client.command()
+async def help(ctx):
+    await ctx.send("```Berth's here to help\n\nCommands:\n•!ping - to check if bot is functional or not"
+    + "\n\n•!add @person MM/DD - to add a birthday to the database\n                    - make sure you tag the person when adding his/her birthday; otherwise, Berth would not know whose berthday it is" 
+    + "\n\nNote: There are more commands in future updates!```")
+    
 
 # Command for adding a birthday 
 # in order to execute, type: !add @user bday(MM/DD)
@@ -156,9 +168,9 @@ async def add(ctx, member, date):
         # for debugging purposes only
         traceback.print_exc()
 
+
     
 
 client.loop.create_task(daily_check())
-
 client.run('TOKEN')
 
