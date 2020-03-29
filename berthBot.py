@@ -11,9 +11,10 @@ from berthObj import *
 client = commands.Bot(command_prefix = '!')
 client.remove_command('help')
 
+
 async def daily_check():
     berthFlag = False
-    greeting_time = '12:00'
+    greeting_time = '15:11'
     tempBDAY = ' '
 
     await client.wait_until_ready()
@@ -31,13 +32,14 @@ async def daily_check():
             while checkLine:
                 tempCL = checkLine.split(" ")
                 now = datetime.now()
-        
-                CL = tempCL[1]
+
+                CL = tempCL[-2]
+
                 date_today = now.strftime('%m/%d')
                 # print(f'tempCL[1]:{CL} now:{date_today}')
                 if(CL == date_today):
                     # print('Found equal dates!')
-                    tempBDAY = tempCL[2]
+                    tempBDAY = tempCL[-1]
                     berthFlag = True
                     bday_bucket.add(tempBDAY)
                 
@@ -150,9 +152,12 @@ async def add(ctx, member, date):
             else:
                 line = addFile.readline()
 
-        if(month < 10):
+        if(month < 10 and len(tempDate[0]) != 2):
             bObj.bday = '0' + bObj.bday
-        
+        if(day < 10 and len(tempDate[0]) != 2):
+            temp = bObj.bdayx[0:3]
+            bObj.bday = temp + "0" + bObj.bday[-1]
+
         # validity checks and makes sure that the dates are valid and that here aren't any duplicate users with birthdays
         if (buff == 1):
             await ctx.send(f'{bObj.user_id} is already on the BerthList!')
